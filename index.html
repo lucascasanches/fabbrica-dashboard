@@ -596,7 +596,12 @@ async function loadData() {
   try {
     const res = await fetch(URL + '&t=' + Date.now());
     const text = await res.text();
-    const json = JSON.parse(text.replace(/^.*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, ''));
+    const clean = text
+      .replace(/^[^{]*\/\*[^*]*\*\/[^{]*/, '')
+      .replace(/^[^\(]*\(/, '')
+      .replace(/\);?\s*$/, '')
+      .trim();
+    const json = JSON.parse(clean);
 
     const cols = json.table.cols.map(c => c.label.trim());
     const rows = json.table.rows || [];
