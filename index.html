@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabbrica Di Pane · Suporte Feiras</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --marrom: #3E2723;
+    --marrom-medio: #5D4037;
+    --marrom-claro: #8D6E63;
+    --bege: #F5EFE6;
+    --bege-escuro: #E8DDD0;
+    --bege-medio: #D7C9B8;
+    --azul: #1A3A5C;
+    --azul-medio: #2C5282;
+    --azul-claro: #E8EFF7;
+    --branco: #FDFAF6;
+    --texto: #2D1B10;
+    --texto-muted: #7A6055;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--bege);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--marrom);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(62,39,35,0.25);
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    gap: 16px;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .logo-placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--bege-escuro);
+    border: 2px solid var(--bege-medio);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .logo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .logo-svg {
+    width: 28px;
+    height: 28px;
+    opacity: 0.6;
+  }
+
+  .brand-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--bege);
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+  }
+
+  .brand-text p {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--bege-medio);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .last-update {
+    font-size: 12px;
+    color: var(--bege-medio);
+    opacity: 0.8;
+    text-align: right;
+  }
+
+  .btn-refresh {
+    background: rgba(245,239,230,0.12);
+    border: 1px solid rgba(245,239,230,0.25);
+    color: var(--bege);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-refresh:hover { background: rgba(245,239,230,0.2); }
+
+  /* ── FILTROS ── */
+  .filters-bar {
+    background: var(--bege-escuro);
+    border-bottom: 1px solid var(--bege-medio);
+    padding: 14px 24px;
+    position: sticky;
+    top: 72px;
+    z-index: 90;
+  }
+
+  .filters-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--marrom-claro);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .feiras-scroll {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .btn-feira {
+    background: var(--branco);
+    border: 1.5px solid var(--bege-medio);
+    color: var(--marrom-medio);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+
+  .btn-feira:hover {
+    border-color: var(--marrom-claro);
+    color: var(--marrom);
+  }
+
+  .btn-feira.active {
+    background: var(--marrom);
+    border-color: var(--marrom);
+    color: var(--bege);
+  }
+
+  .btn-search {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .search-input {
+    background: var(--branco);
+    border: 1.5px solid var(--bege-medio);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus { border-color: var(--marrom-claro); }
+  .search-input::placeholder { color: var(--texto-muted); opacity: 0.6; }
+
+  /* ── SUMÁRIO DE CARDS ── */
+  .summary-section {
+    max-width: 1280px;
+    margin: 24px auto 0;
+    padding: 0 24px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .summary-card {
+    background: var(--branco);
+    border: 1px solid var(--bege-medio);
+    border-radius: 12px;
+    padding: 16px 18px;
+    transition: box-shadow 0.2s;
+  }
+
+  .summary-card:hover { box-shadow: 0 4px 12px rgba(62,39,35,0.08); }
+
+  .summary-card .s-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--texto-muted);
+    margin-bottom: 6px;
+  }
+
+  .summary-card .s-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--marrom);
+    line-height: 1;
+  }
+
+  .summary-card .s-sub {
+    font-size: 12px;
+    color: var(--texto-muted);
+    margin-top: 4px;
+  }
+
+  .summary-card.azul .s-value { color: var(--azul); }
+  .summary-card.azul { border-left: 3px solid var(--azul); }
+  .summary-card.marrom { border-left: 3px solid var(--marrom); }
+
+  /* ── TABELA PRINCIPAL ── */
+  .main-section {
+    max-width: 1280px;
+    margin: 20px auto 40px;
+    padding: 0 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--marrom);
+  }
+
+  .section-count {
+    font-size: 13px;
+    color: var(--texto-muted);
+    background: var(--bege-escuro);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* tabela desktop */
+  .table-wrap {
+    background: var(--branco);
+    border: 1px solid var(--bege-medio);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead tr {
+    background: var(--marrom);
+  }
+
+  thead th {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--bege-medio);
+    padding: 13px 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  thead th.num { text-align: right; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--bege-escuro);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--bege); }
+
+  tbody td {
+    padding: 12px 16px;
+    color: var(--texto);
+    vertical-align: middle;
+  }
+
+  tbody td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
+  .badge-feira {
+    background: var(--azul-claro);
+    color: var(--azul);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .produto-nome {
+    font-weight: 600;
+    color: var(--marrom);
+  }
+
+  .sabor-tag {
+    font-size: 12px;
+    color: var(--texto-muted);
+    margin-top: 2px;
+  }
+
+  .cod {
+    font-family: monospace;
+    font-size: 12px;
+    background: var(--bege-escuro);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--texto-muted);
+  }
+
+  .necessidade-val {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--marrom);
+  }
+
+  .media-val { color: var(--texto-muted); }
+
+  .proj-val {
+    color: var(--azul);
+    font-weight: 600;
+  }
+
+  /* ── CARDS MOBILE ── */
+  .cards-mobile { display: none; }
+
+  .item-card {
+    background: var(--branco);
+    border: 1px solid var(--bege-medio);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+
+  .item-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .item-card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    border-top: 1px solid var(--bege-escuro);
+    padding-top: 10px;
+  }
+
+  .item-stat { text-align: center; }
+
+  .item-stat .st-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--texto-muted);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .item-stat .st-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--marrom);
+  }
+
+  .item-stat.proj .st-value { color: var(--azul); font-size: 14px; }
+
+  /* ── LOADING / EMPTY ── */
+  .state-box {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--texto-muted);
+  }
+
+  .state-box .st-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+    opacity: 0.4;
+  }
+
+  .state-box p { font-size: 15px; }
+
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--bege-medio);
+    border-top-color: var(--marrom);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ERRO */
+  .error-box {
+    background: #FFF3F3;
+    border: 1px solid #FFCDD2;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    color: #B71C1C;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .header-inner { height: 60px; padding: 0 16px; }
+    .brand-text h1 { font-size: 16px; }
+    .last-update { display: none; }
+    .filters-bar { padding: 10px 16px; top: 60px; }
+    .search-input { width: 140px; }
+    .summary-section { padding: 0 16px; margin-top: 16px; }
+    .main-section { padding: 0 16px; }
+    .table-wrap { display: none; }
+    .cards-mobile { display: block; }
+  }
+
+  @media (max-width: 480px) {
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .search-input { width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="logo-placeholder" id="logoContainer">
+        <!-- Logo será inserido aqui -->
+        <svg class="logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 22C4 18 8 14 16 14C24 14 28 18 28 22" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+          <path d="M8 22C8 17 11 11 16 8C21 11 24 17 24 22" stroke="#5D4037" stroke-width="1.5" stroke-linecap="round"/>
+          <ellipse cx="16" cy="23" rx="12" ry="3" fill="#8D6E63" opacity="0.3"/>
+          <circle cx="16" cy="8" r="2" fill="#5D4037"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Fabbrica Di Pane</h1>
+        <p>Suporte Feiras</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="last-update" id="lastUpdate">Carregando...</span>
+      <button class="btn-refresh" onclick="loadData()">
+        ↻ Atualizar
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- FILTROS -->
+<div class="filters-bar">
+  <div class="filters-inner">
+    <span class="filter-label">Feira</span>
+    <div class="feiras-scroll" id="feirasButtons"></div>
+    <div class="btn-search">
+      <input type="text" class="search-input" placeholder="Buscar produto..." id="searchInput" oninput="renderTable()">
+    </div>
+  </div>
+</div>
+
+<!-- SUMÁRIO -->
+<section class="summary-section">
+  <div class="summary-grid" id="summaryGrid">
+    <div class="summary-card">
+      <div class="s-label">Carregando</div>
+      <div class="s-value">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- TABELA PRINCIPAL -->
+<section class="main-section">
+  <div class="section-header">
+    <span class="section-title" id="sectionTitle">Itens</span>
+    <span class="section-count" id="sectionCount"></span>
+  </div>
+
+  <!-- Desktop -->
+  <div class="table-wrap" id="tableWrap">
+    <div class="state-box" id="loadingState">
+      <div class="spinner"></div>
+      <p>Buscando dados da planilha...</p>
+    </div>
+    <table id="mainTable" style="display:none">
+      <thead>
+        <tr>
+          <th>Feira</th>
+          <th>Produto</th>
+          <th>Código</th>
+          <th class="num">Média vendido</th>
+          <th class="num">Necessidade</th>
+          <th class="num">Projeção (R$)</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Mobile -->
+  <div class="cards-mobile" id="cardsMobile"></div>
+</section>
+
+<script>
+const SHEET_ID = '1cedKmWb_Hc0MOFa8uKb2VRrvq_qDlIbGAm-cMKHCMow';
+const SHEET_NAME = 'Suporte feiras';
+const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+let allData = [];
+let feiras = [];
+let selectedFeira = 'Todas';
+
+async function loadData() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('mainTable').style.display = 'none';
+  document.getElementById('cardsMobile').innerHTML = '';
+  document.getElementById('lastUpdate').textContent = 'Atualizando...';
+
+  try {
+    const res = await fetch(URL + '&t=' + Date.now());
+    const text = await res.text();
+    const clean = text
+      .replace(/^[^{]*\/\*[^*]*\*\/[^{]*/, '')
+      .replace(/^[^\(]*\(/, '')
+      .replace(/\);?\s*$/, '')
+      .trim();
+    const json = JSON.parse(clean);
+
+    const cols = json.table.cols.map(c => c.label.trim());
+    const rows = json.table.rows || [];
+
+    // índices das colunas
+    const idx = {
+      unidade: cols.findIndex(c => /unidade/i.test(c)),
+      produto:  cols.findIndex(c => /produto/i.test(c)),
+      sabor:    cols.findIndex(c => /sabor/i.test(c)),
+      codigo:   cols.findIndex(c => /c.digo|codigo/i.test(c)),
+      media:    cols.findIndex(c => /m.dia/i.test(c)),
+      necessidade: cols.findIndex(c => /necessidade/i.test(c)),
+      projecao: cols.findIndex(c => /proje/i.test(c)),
+    };
+
+    allData = rows.map(r => {
+      const get = (i) => (i >= 0 && r.c[i] && r.c[i].v != null) ? r.c[i].v : '';
+      return {
+        unidade:     String(get(idx.unidade)),
+        produto:     String(get(idx.produto)),
+        sabor:       String(get(idx.sabor)),
+        codigo:      String(get(idx.codigo)),
+        media:       parseFloat(get(idx.media)) || 0,
+        necessidade: parseFloat(get(idx.necessidade)) || 0,
+        projecao:    parseFloat(get(idx.projecao)) || 0,
+      };
+    }).filter(d => d.produto && d.produto !== 'undefined');
+
+    feiras = ['Todas', ...new Set(allData.map(d => d.unidade).filter(Boolean).sort())];
+    selectedFeira = 'Todas';
+
+    renderFeiras();
+    renderSummary();
+    renderTable();
+
+    const now = new Date();
+    document.getElementById('lastUpdate').textContent =
+      'Atualizado ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+
+  } catch(e) {
+    document.getElementById('loadingState').innerHTML = `
+      <div class="error-box">
+        <strong>Não foi possível carregar os dados.</strong><br>
+        Verifique se a planilha está pública (modo Leitor) e tente novamente.<br>
+        <small style="opacity:0.7">${e.message}</small>
+      </div>`;
+    document.getElementById('lastUpdate').textContent = 'Erro ao carregar';
+  }
+}
+
+function renderFeiras() {
+  const container = document.getElementById('feirasButtons');
+  container.innerHTML = feiras.map(f => `
+    <button class="btn-feira ${f === selectedFeira ? 'active' : ''}"
+      onclick="selectFeira('${f.replace(/'/g,"\\'")}')">
+      ${f}
+    </button>`).join('');
+}
+
+function selectFeira(f) {
+  selectedFeira = f;
+  renderFeiras();
+  renderSummary();
+  renderTable();
+}
+
+function getFiltered() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  return allData.filter(d => {
+    const feirasOk = selectedFeira === 'Todas' || d.unidade === selectedFeira;
+    const searchOk = !search ||
+      d.produto.toLowerCase().includes(search) ||
+      d.sabor.toLowerCase().includes(search) ||
+      d.codigo.toLowerCase().includes(search);
+    return feirasOk && searchOk;
+  });
+}
+
+function renderSummary() {
+  const data = selectedFeira === 'Todas' ? allData : allData.filter(d => d.unidade === selectedFeira);
+  const totalItens = data.length;
+  const totalNec = data.reduce((s, d) => s + d.necessidade, 0);
+  const totalProj = data.reduce((s, d) => s + d.projecao, 0);
+  const totalFeiras = new Set(data.map(d => d.unidade)).size;
+
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="summary-card marrom">
+      <div class="s-label">Feiras</div>
+      <div class="s-value">${totalFeiras}</div>
+      <div class="s-sub">${selectedFeira === 'Todas' ? 'no total' : selectedFeira}</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Itens</div>
+      <div class="s-value">${totalItens}</div>
+      <div class="s-sub">produtos listados</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Total necessidade</div>
+      <div class="s-value">${totalNec.toLocaleString('pt-BR')}</div>
+      <div class="s-sub">unidades a levar</div>
+    </div>
+    <div class="summary-card azul">
+      <div class="s-label">Projeção total</div>
+      <div class="s-value" style="font-size:22px">R$ ${totalProj.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
+      <div class="s-sub">faturamento esperado</div>
+    </div>
+  `;
+}
+
+function renderTable() {
+  const data = getFiltered();
+  document.getElementById('sectionTitle').textContent =
+    selectedFeira === 'Todas' ? 'Todos os itens' : selectedFeira;
+  document.getElementById('sectionCount').textContent = `${data.length} produto${data.length !== 1 ? 's' : ''}`;
+
+  // Desktop
+  document.getElementById('loadingState').style.display = 'none';
+  const table = document.getElementById('mainTable');
+  table.style.display = data.length ? 'table' : 'none';
+
+  if (!data.length) {
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('loadingState').innerHTML = `
+      <span class="st-icon">🔍</span>
+      <p>Nenhum item encontrado.</p>`;
+  }
+
+  document.getElementById('tableBody').innerHTML = data.map(d => `
+    <tr>
+      <td><span class="badge-feira">${d.unidade}</span></td>
+      <td>
+        <div class="produto-nome">${d.produto}</div>
+        ${d.sabor ? `<div class="sabor-tag">${d.sabor}</div>` : ''}
+      </td>
+      <td>${d.codigo ? `<span class="cod">${d.codigo}</span>` : '—'}</td>
+      <td class="num media-val">${d.media.toLocaleString('pt-BR')}</td>
+      <td class="num"><span class="necessidade-val">${d.necessidade.toLocaleString('pt-BR')}</span></td>
+      <td class="num proj-val">R$ ${d.projecao.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+    </tr>`).join('');
+
+  // Mobile
+  document.getElementById('cardsMobile').innerHTML = data.map(d => `
+    <div class="item-card">
+      <div class="item-card-header">
+        <div>
+          <div class="produto-nome" style="font-size:15px">${d.produto}</div>
+          ${d.sabor ? `<div class="sabor-tag">${d.sabor}</div>` : ''}
+          ${d.codigo ? `<span class="cod" style="margin-top:4px;display:inline-block">${d.codigo}</span>` : ''}
+        </div>
+        <span class="badge-feira">${d.unidade}</span>
+      </div>
+      <div class="item-card-body">
+        <div class="item-stat">
+          <span class="st-label">Média</span>
+          <span class="st-value" style="font-size:16px">${d.media.toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="item-stat">
+          <span class="st-label">Necessidade</span>
+          <span class="st-value">${d.necessidade.toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="item-stat proj">
+          <span class="st-label">Projeção</span>
+          <span class="st-value">R$ ${d.projecao.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// Permite adicionar logo via drag & drop ou clicando
+document.getElementById('logoContainer').addEventListener('click', () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('logoContainer').innerHTML =
+        `<img src="${ev.target.result}" alt="Logo Fabbrica Di Pane">`;
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+});
+
+loadData();
+</script>
+</body>
+</html>
